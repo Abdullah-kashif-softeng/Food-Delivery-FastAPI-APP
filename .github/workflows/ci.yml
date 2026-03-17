@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  backend-ci:
+    name: Backend checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run linter
+        run: |
+          cd backend
+          pip install flake8
+          flake8 . --max-line-length=88 \
+                   --exclude=venv,__pycache__,.env
+
+      - name: Run tests
+        run: |
+          cd backend
+          pip install pytest pytest-asyncio
+          pytest --tb=short
+        continue-on-error: true
+
+  frontend-ci:
+    name: Frontend checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Run lint
+        run: |
+          cd frontend
+          npm run lint
+        continue-on-error: true
+
+      - name: Build check
+        run: |
+          cd frontend
+          npm run build
+        continue-on-error: true

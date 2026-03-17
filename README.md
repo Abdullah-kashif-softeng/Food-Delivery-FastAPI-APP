@@ -250,16 +250,23 @@ POST   /api/v1/payments/refund   ← request refund
 
 ## 📁 Project Structure
 ```
+## Project Structure
+
 food_delivery/
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       └── cd.yml
 │
 ├── backend/
 │   ├── models/
 │   │   ├── __init__.py
-│   │   ├── user.py            ← User, Customer, Rider
-│   │   ├── restaurant.py      ← Restaurant
-│   │   ├── menu_item.py       ← MenuItem
-│   │   ├── order.py           ← Order, OrderItem
-│   │   └── payment.py         ← Payment
+│   │   ├── user.py
+│   │   ├── restaurant.py
+│   │   ├── menu_item.py
+│   │   ├── order.py
+│   │   └── payment.py
 │   │
 │   ├── services/
 │   │   ├── __init__.py
@@ -275,14 +282,16 @@ food_delivery/
 │   │   └── db.py
 │   │
 │   ├── main.py
-│   ├── .env.example
-│   ├── requirements.txt
 │   ├── Dockerfile
-│   └── docker-compose.yml
+│   ├── requirements.txt
+│   └── .env.example
 │
-└── frontend/
-    └── (Next.js — coming in Phase 2)
-```
+├── frontend/
+│   └── (Next.js — Phase 2)
+│
+├── docker-compose.yml
+├── .gitignore
+└── README.md
 
 ---
 

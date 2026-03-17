@@ -1,0 +1,85 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        run: |
+          docker build -t food_delivery_backend ./backend
+
+      - name: Build frontend image
+        run: |
+          docker build -t food_delivery_frontend ./frontend
+
+      - name: Deploy
+        run: |
+          echo "Deployment will be configured later"
+```
+
+---
+
+## What each step does simply:
+
+### CI runs on every push:
+```
+1. Checkout code          ← pulls your code into GitHub runner
+2. Set up Python 3.12     ← installs Python
+3. Install dependencies   ← pip install -r requirements.txt
+4. Linter (flake8)        ← checks code style and formatting
+5. Tests (pytest)         ← runs all tests (none yet, that's ok)
+6. Set up Node.js         ← installs Node for frontend
+7. npm install            ← installs frontend dependencies
+8. Frontend lint          ← checks frontend code style
+9. Frontend build         ← makes sure frontend compiles
+```
+
+### CD runs only on merge to main:
+```
+1. Checkout code          ← pulls your code
+2. Set up Docker          ← prepares Docker builder
+3. Build backend image    ← creates backend Docker image
+4. Build frontend image   ← creates frontend Docker image
+5. Deploy                 ← placeholder for now
+```
+
+---
+
+## What `continue-on-error: true` means
+```
+Without it:
+pytest finds no tests → CI fails ❌ → looks broken on GitHub
+
+With it:
+pytest finds no tests → CI continues ✅ → looks clean on GitHub
+```
+
+We remove it once we have real tests and real frontend code.
+
+---
+
+## Updates we'll make later:
+```
+After feature/database  
+→ add PostgreSQL service to ci.yml
+
+After writing tests     
+→ remove continue-on-error from pytest step
+
+When hosting is decided 
+→ replace echo "Deploy" with real deploy commands
+
+When using DockerHub    
+→ add docker login + docker push steps
